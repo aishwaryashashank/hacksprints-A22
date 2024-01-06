@@ -1,0 +1,53 @@
+import tkinter as tk
+from tkinter import scrolledtext
+
+class MedicalChatbot:
+    def __init__(self):
+        self.responses = {
+            'greeting': ["Hello! How can I assist you today?", "Hi there! What's your health concern?"],
+            'symptoms': ["Could you please describe your symptoms?", "I'm here to help. Tell me about your symptoms."],
+            'diagnosis': ["Based on your description, it might be [condition]. However, consult a healthcare professional for accurate diagnosis.",
+                          "I'm not a doctor, but your symptoms might be related to [condition]. Please consult a professional."],
+            'farewell': ["Take care! If you have more questions, feel free to ask.", "Wishing you good health. Goodbye!"]
+        }
+
+    def get_response(self, user_input):
+        if 'hello' in user_input.lower():
+            return self.responses['greeting'][0]
+        elif 'symptoms' in user_input.lower():
+            return self.responses['symptoms'][0]
+        elif 'diagnose' in user_input.lower():
+            return self.responses['diagnosis'][0]
+        elif any(keyword in user_input.lower() for keyword in ['bye', 'thank you']):
+            return self.responses['farewell'][0]
+        else:
+            return "I'm sorry, I didn't understand. Can you provide more details?"
+
+class MedicalChatbotGUI:
+    def __init__(self, master):
+        self.master = master
+        master.title("Medical Chatbot")
+
+        self.chat_display = scrolledtext.ScrolledText(master, wrap=tk.WORD, width=40, height=15)
+        self.chat_display.pack(padx=10, pady=10)
+
+        self.user_input_entry = tk.Entry(master, width=40)
+        self.user_input_entry.pack(padx=10, pady=10)
+
+        self.send_button = tk.Button(master, text="Send", command=self.send_message)
+        self.send_button.pack(pady=10)
+
+        self.chatbot = MedicalChatbot()
+
+    def send_message(self):
+        user_input = self.user_input_entry.get()
+        response = self.chatbot.get_response(user_input)
+
+        self.chat_display.insert(tk.END, f"You: {user_input}\n")
+        self.chat_display.insert(tk.END, f"Medical Chatbot: {response}\n")
+        self.user_input_entry.delete(0, tk.END)  # Clear the input field
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = MedicalChatbotGUI(root)
+    root.mainloop() 
